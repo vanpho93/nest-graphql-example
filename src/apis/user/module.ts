@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmEntityModule } from '@/entity';
+import { EntityModule } from '@/entity';
 import { CreateUserResolver } from './create';
 import { ListUserResolver } from './list';
 import { FieldResolvers } from './field-resolvers';
 
 @Module({
-  imports: [TypeOrmEntityModule],
+  imports: [EntityModule],
   providers: [CreateUserResolver, ListUserResolver, FieldResolvers],
 })
 export class UserModule {}

@@ -9,4 +9,4 @@ import { EntityProvider } from './entity.provider';
   exports: [EntityProvider],
   providers: [EntityProvider],
 })
-export class TypeOrmEntityModule {}
+export class EntityModule {}
