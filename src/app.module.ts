@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RecipeModule } from '@/apis/recipe/module';
 import { UserModule } from '@/apis/user/module';
 import { HealthCheckResolver } from './healthcheck.resolver';
+import { TypeOrmEntityModule } from './typeorm';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { HealthCheckResolver } from './healthcheck.resolver';
         url: configService.get('POSTGRES_URL'),
       }),
     }),
+    TypeOrmEntityModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
