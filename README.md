@@ -12,13 +12,25 @@ $ npm install
 
 ```bash
 mv .env.example .env
+mv .env.example .env.test
 ```
+
+## First time setup
+
+* Create a databases (for development and testing)
+* Update POSTGRES_URL
 
 ## Running the app
 
 ```bash
 # watch mode
 $ npm run start:dev
+```
+
+## Running e2e tests
+
+```bash
+$ npm run test:e2e
 ```
 
 ## Showcases
@@ -31,6 +43,34 @@ $ npm run start:dev
 ## Sample queries / mutations
 
 Open http://localhost:3000/graphql
+
+### Query recipes with user
+
+```graphql
+query {
+  recipes(skip: 10, limit: 10) {
+    id
+    title
+    user {
+      email
+    }
+  }
+}
+```
+
+### Query users with recipes
+```graphql
+query {
+  users(skip: 2, limit: 2) {
+    id
+    email
+    recipes {
+      title
+    }
+  }
+}
+```
+
 
 ### Create a new user
 
@@ -65,33 +105,6 @@ mutation {
     createdAt
     updatedAt
     description
-  }
-}
-```
-
-### Query recipes with user
-
-```graphql
-query {
-  recipes {
-    id
-    title
-    user {
-      email
-    }
-  }
-}
-```
-
-### Query users with recipes
-```graphql
-{
-  users {
-    id
-    email
-    recipes {
-      title
-    }
   }
 }
 ```

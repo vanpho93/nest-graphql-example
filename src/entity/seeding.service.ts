@@ -14,8 +14,10 @@ export class SeedingService {
   private logger = new Logger(SeedingService.name);
 
   public async onModuleInit() {
-    if (this.configService.get('NODE_ENV') === 'production') {
-      this.logger.debug(`Skipping seeding in production environment`);
+    if (this.configService.get('NODE_ENV') !== 'local') {
+      this.logger.debug(
+        `Skipping seeding in ${this.configService.get('NODE_ENV')}`,
+      );
       return;
     }
     if (this.configService.get('SEED_SAMPLE_DATA') !== 'true') {
@@ -27,6 +29,10 @@ export class SeedingService {
       this.logger.debug(`Skipping seeding as there are already recipes`);
       return;
     }
+    await this.seed();
+  }
+
+  private async seed() {
     this.logger.debug(`Seeding sample data`);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { faker } = require('@faker-js/faker');
@@ -40,7 +46,7 @@ export class SeedingService {
       });
       for (const _recipeIndex of _.range(NUMBER_OF_RECIPES_PER_USER)) {
         const recipe = await this.entityProvider.Recipe.save({
-          title: faker.lorem.sentence(),
+          title: faker.lorem.words(4),
           description: faker.lorem.paragraph(),
           userId: user.id,
           ingredients: [

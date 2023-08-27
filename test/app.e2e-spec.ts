@@ -15,7 +15,7 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('healthcheck works', () => {
     return request(app.getHttpServer())
       .post('/graphql')
       .send({
@@ -24,6 +24,28 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect(({ body }) => {
         expect(body.data.healthcheck).toEqual({ ok: true });
+      });
+  });
+
+  it('create user', () => {
+    const query = `
+      mutation {
+        createUser(createUserInput: {
+          email: "foo-${Date.now()}@example.com",
+          name: "Foo"
+        }) {
+          name
+        }
+      }
+    `;
+    return request(app.getHttpServer())
+      .post('/graphql')
+      .send({ query })
+      .expect(200)
+      .expect(({ body }) => {
+        expect(body.data.createUser).toEqual({
+          name: 'Foo',
+        });
       });
   });
 
