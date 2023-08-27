@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmEntityModule } from '@/entities';
+import { TypeOrmEntityModule } from '@/entity';
 import { CreateRecipeResolver } from './create';
 import { GetRecipeResolver } from './get';
 import { ListRecipeResolver } from './list';

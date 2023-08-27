@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { NotFoundException } from '@nestjs/common';
-import { EntityProvider, Recipe, RecipeObjectType } from '@/entities';
+import { EntityProvider, Recipe, RecipeObjectType } from '@/entity';
 
 @Resolver(() => RecipeObjectType)
 export class GetRecipeResolver {

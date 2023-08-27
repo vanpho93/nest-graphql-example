@@ -1,7 +1,7 @@
 import { Args, InputType, Mutation, PickType, Resolver } from '@nestjs/graphql';
 import { pubSub } from '@/apis/shared';
-import { EntityProvider as TypeOrmEntityProvider, User } from '@/entities';
-import { UserObjectType } from '@/entities/object-types';
+import { EntityProvider as TypeOrmEntityProvider, User } from '@/entity';
+import { UserObjectType } from '@/entity/object-types';
 
 @InputType()
 export class CreateUserInput extends PickType(User, ['email', 'name']) {}

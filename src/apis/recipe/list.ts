@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from '@nestjs/graphql';
 import { Min, Max } from 'class-validator';
-import { EntityProvider, Recipe, RecipeObjectType } from '@/entities';
+import { EntityProvider, Recipe, RecipeObjectType } from '@/entity';
 
 @ArgsType()
 export class RecipesArgs {
