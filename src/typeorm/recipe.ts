@@ -1,16 +1,39 @@
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { IsOptional, Length, MaxLength } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+@InputType({ isAbstract: true })
+@ObjectType({ isAbstract: true })
 @Entity()
 export class Recipe {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field(() => ID)
   @Column()
-  firstName: string;
+  userId: number;
 
+  @Field()
+  @MaxLength(30)
   @Column()
-  lastName: string;
+  title: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Field({ nullable: true })
+  @IsOptional()
+  @Length(30, 255)
+  @Column()
+  description?: string;
+
+  @Field(() => [String])
+  @Column({ type: 'json' })
+  ingredients: string[];
+
+  @Field()
+  @Column({ default: '2023-01-01' })
+  createdAt: Date;
+
+  @Field()
+  @Column({ default: '2023-01-01' })
+  updatedAt: Date;
 }

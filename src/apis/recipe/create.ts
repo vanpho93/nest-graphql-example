@@ -1,9 +1,9 @@
 import { Args, InputType, Mutation, PickType, Resolver } from '@nestjs/graphql';
 import { pubSub } from '@/apis/shared';
-import { EntityProvider, Recipe, RecipeBase, RecipeObjectType } from '@/entity';
+import { EntityProvider, Recipe, RecipeObjectType } from '@/typeorm';
 
 @InputType()
-export class CreateRecipeInput extends PickType(RecipeBase, [
+export class CreateRecipeInput extends PickType(Recipe, [
   'title',
   'description',
   'ingredients',

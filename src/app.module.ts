@@ -2,12 +2,10 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RecipeModule } from '@/apis/recipe/module';
 import { UserModule } from '@/apis/user/module';
 import { HealthCheckResolver } from './healthcheck.resolver';
-import { TypeOrmEntityModule } from './typeorm';
 
 @Module({
   imports: [
@@ -28,16 +26,9 @@ import { TypeOrmEntityModule } from './typeorm';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         synchronize: true,
+        autoLoadEntities: true,
         type: 'postgres',
         url: configService.get('POSTGRES_URL'),
-      }),
-    }),
-    TypeOrmEntityModule,
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get('MONGO_URL'),
       }),
     }),
   ],

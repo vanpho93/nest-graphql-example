@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from '@nestjs/graphql';
 import { Min, Max } from 'class-validator';
-import { EntityProvider, User, UserObjectType } from '@/entity';
+import { EntityProvider, User, UserObjectType } from '@/typeorm';
 
 @ArgsType()
 export class UsersArgs {
@@ -20,7 +20,10 @@ export class ListUserResolver {
 
   @Query(() => [UserObjectType])
   async users(@Args() { skip, take }: UsersArgs): Promise<User[]> {
-    const users = await this.entity.User.find().skip(skip).limit(take);
+    const users = await this.entity.User.find({
+      skip,
+      take,
+    });
     return users;
   }
 }

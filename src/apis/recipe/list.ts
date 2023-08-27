@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from '@nestjs/graphql';
 import { Min, Max } from 'class-validator';
-import { EntityProvider, Recipe, RecipeObjectType } from '@/entity';
+import { EntityProvider, Recipe, RecipeObjectType } from '@/typeorm';
 
 @ArgsType()
 export class RecipesArgs {
@@ -20,7 +20,10 @@ export class ListRecipeResolver {
 
   @Query(() => [RecipeObjectType])
   async recipes(@Args() { skip, take }: RecipesArgs): Promise<Recipe[]> {
-    const recipes = await this.entity.Recipe.find().skip(skip).limit(take);
+    const recipes = await this.entity.Recipe.find({
+      skip,
+      take,
+    });
     return recipes;
   }
 }

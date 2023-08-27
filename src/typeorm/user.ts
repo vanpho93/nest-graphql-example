@@ -1,16 +1,31 @@
+import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { IsOptional, Length, MaxLength } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+@InputType({ isAbstract: true })
+@ObjectType({ isAbstract: true })
 @Entity()
 export class User {
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  firstName: string;
+  @Field()
+  @MaxLength(30)
+  @Column({ unique: true })
+  email: string;
 
-  @Column()
-  lastName: string;
+  @Field({ nullable: true })
+  @IsOptional()
+  @Length(30, 255)
+  @Column({ nullable: true })
+  name?: string;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Field()
+  @Column({ default: '2023-01-01' })
+  createdAt: Date;
+
+  @Field()
+  @Column({ default: '2023-01-01' })
+  updatedAt: Date;
 }

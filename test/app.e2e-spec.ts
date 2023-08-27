@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import * as mongoose from 'mongoose';
 import { AppModule } from '@/app.module';
 
 describe('AppController (e2e)', () => {
@@ -30,8 +29,5 @@ describe('AppController (e2e)', () => {
 
   afterAll(async () => {
     app.close();
-    for (const connection of mongoose.connections) {
-      await connection.close();
-    }
   });
 });

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { EntityModule } from '@/entity';
+import { TypeOrmEntityModule } from '@/typeorm';
 import { CreateRecipeResolver } from './create';
 import { GetRecipeResolver } from './get';
 import { ListRecipeResolver } from './list';
@@ -7,7 +7,7 @@ import { DeleteRecipeResolver } from './delete';
 import { FieldResolvers } from './field-resolvers';
 
 @Module({
-  imports: [EntityModule],
+  imports: [TypeOrmEntityModule],
   providers: [
     CreateRecipeResolver,
     GetRecipeResolver,

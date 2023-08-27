@@ -1,21 +1,20 @@
 import { Args, InputType, Mutation, PickType, Resolver } from '@nestjs/graphql';
 import { pubSub } from '@/apis/shared';
-import { EntityProvider, UserObjectType, UserBase, User } from '@/entity';
+import { EntityProvider as TypeOrmEntityProvider, User } from '@/typeorm';
+import { UserObjectType } from '@/typeorm/object-types';
 
 @InputType()
-export class CreateUserInput extends PickType(UserBase, ['email', 'name']) {}
+export class CreateUserInput extends PickType(User, ['email', 'name']) {}
 
 @Resolver(() => UserObjectType)
 export class CreateUserResolver {
-  constructor(private readonly entity: EntityProvider) {}
+  constructor(private readonly entity: TypeOrmEntityProvider) {}
 
   @Mutation(() => UserObjectType)
   async createUser(
     @Args('createUserInput') createUserInput: CreateUserInput,
   ): Promise<User> {
-    const user = new this.entity.User(createUserInput);
-    await user.validate();
-    await user.save();
+    const user = await this.entity.User.save(createUserInput);
     pubSub.publish('UserCreated', { userCreated: user });
     return user;
   }

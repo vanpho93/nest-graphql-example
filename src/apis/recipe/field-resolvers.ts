@@ -1,5 +1,5 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { EntityProvider, Recipe, RecipeObjectType, User } from '@/entity';
+import { EntityProvider, Recipe, RecipeObjectType, User } from '@/typeorm';
 
 @Resolver(() => RecipeObjectType)
 export class FieldResolvers {
@@ -7,6 +7,6 @@ export class FieldResolvers {
 
   @ResolveField()
   async user(@Parent() recipe: Recipe): Promise<User> {
-    return await this.entity.User.findById(recipe.userId);
+    return await this.entity.User.findOne({ where: { id: recipe.userId } });
   }
 }

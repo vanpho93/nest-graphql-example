@@ -1,6 +1,6 @@
 ## Description
 
-An example of a NestJS application that uses GraphQL with MongoDB.
+An example of a NestJS application that uses GraphQL with TypeORM.
 
 ## Installation
 
