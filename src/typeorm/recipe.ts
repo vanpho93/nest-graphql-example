@@ -1,18 +1,22 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsOptional, Length, MaxLength } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from './user';
 
 @InputType({ isAbstract: true })
 @ObjectType({ isAbstract: true })
 @Entity()
 export class Recipe {
-  @Field(() => ID)
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => ID)
+  @Field()
   @Column()
   userId: number;
+
+  @ManyToOne(() => User, (user) => user.recipes)
+  user: User;
 
   @Field()
   @MaxLength(30)

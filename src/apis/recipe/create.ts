@@ -18,7 +18,7 @@ export class CreateRecipeResolver {
   async createRecipe(
     @Args('createRecipeInput') createRecipeInput: CreateRecipeInput,
   ): Promise<Recipe> {
-    const recipe = await this.entity.Recipe.create(createRecipeInput);
+    const recipe = await this.entity.Recipe.save(createRecipeInput);
     pubSub.publish('recipeCreated', { recipeCreated: recipe });
     return recipe;
   }

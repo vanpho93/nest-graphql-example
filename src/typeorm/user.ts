@@ -1,12 +1,13 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsOptional, Length, MaxLength } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Recipe } from './recipe';
 
 @InputType({ isAbstract: true })
 @ObjectType({ isAbstract: true })
 @Entity()
 export class User {
-  @Field(() => ID)
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,4 +29,7 @@ export class User {
   @Field()
   @Column({ default: '2023-01-01' })
   updatedAt: Date;
+
+  @OneToMany(() => Recipe, (recipe) => recipe.user)
+  recipes: Recipe[];
 }
