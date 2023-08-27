@@ -1,5 +1,5 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { EntityProvider, Recipe, RecipeObjectType, User } from '@/typeorm';
+import { EntityProvider, Recipe, RecipeObjectType, User } from '@/entities';
 
 @Resolver(() => RecipeObjectType)
 export class FieldResolvers {

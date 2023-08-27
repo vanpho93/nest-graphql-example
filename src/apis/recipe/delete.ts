@@ -1,6 +1,6 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { NotFoundException } from '@nestjs/common';
-import { EntityProvider, RecipeObjectType } from '@/typeorm';
+import { EntityProvider, RecipeObjectType } from '@/entities';
 
 @Resolver(() => RecipeObjectType)
 export class DeleteRecipeResolver {

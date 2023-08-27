@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from '@nestjs/graphql';
 import { Min, Max } from 'class-validator';
-import { EntityProvider, User, UserObjectType } from '@/typeorm';
+import { EntityProvider, User, UserObjectType } from '@/entities';
 
 @ArgsType()
 export class UsersArgs {
