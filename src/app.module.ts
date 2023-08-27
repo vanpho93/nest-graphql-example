@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RecipeModule } from '@/apis/recipe/module';
 import { UserModule } from '@/apis/user/module';
@@ -11,7 +11,7 @@ import { HealthCheckResolver } from './healthcheck.resolver';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     RecipeModule,
     UserModule,
@@ -21,11 +21,14 @@ import { HealthCheckResolver } from './healthcheck.resolver';
       sortSchema: true,
       installSubscriptionHandlers: true,
     }),
-    MongooseModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get('MONGO_URL') ?? '',
+        synchronize: true,
+        autoLoadEntities: true,
+        type: 'postgres',
+        url: configService.get('POSTGRES_URL'),
       }),
     }),
   ],

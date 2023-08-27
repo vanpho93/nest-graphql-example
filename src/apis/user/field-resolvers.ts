@@ -1,5 +1,4 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { Types } from 'mongoose';
 import { EntityProvider, Recipe, User, UserObjectType } from '@/entity';
 
 @Resolver(() => UserObjectType)
@@ -9,7 +8,7 @@ export class FieldResolvers {
   @ResolveField()
   async recipes(@Parent() user: User): Promise<Recipe[]> {
     const recipes = await this.entity.Recipe.find({
-      userId: new Types.ObjectId(user.id),
+      where: { userId: user.id },
     });
     return recipes;
   }

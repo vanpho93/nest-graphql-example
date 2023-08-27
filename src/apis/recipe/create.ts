@@ -1,14 +1,9 @@
 import { Args, InputType, Mutation, PickType, Resolver } from '@nestjs/graphql';
 import { pubSub } from '@/apis/shared';
-import {
-  EntityProvider,
-  Recipe,
-  RecipeBase,
-  RecipeObjectType,
-} from '@/entity';
+import { EntityProvider, Recipe, RecipeObjectType } from '@/entity';
 
 @InputType()
-export class CreateRecipeInput extends PickType(RecipeBase, [
+export class CreateRecipeInput extends PickType(Recipe, [
   'title',
   'description',
   'ingredients',
@@ -23,7 +18,7 @@ export class CreateRecipeResolver {
   async createRecipe(
     @Args('createRecipeInput') createRecipeInput: CreateRecipeInput,
   ): Promise<Recipe> {
-    const recipe = await this.entity.Recipe.create(createRecipeInput);
+    const recipe = await this.entity.Recipe.save(createRecipeInput);
     pubSub.publish('recipeCreated', { recipeCreated: recipe });
     return recipe;
   }

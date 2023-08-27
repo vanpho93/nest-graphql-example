@@ -20,7 +20,10 @@ export class ListUserResolver {
 
   @Query(() => [UserObjectType])
   async users(@Args() { skip, take }: UsersArgs): Promise<User[]> {
-    const users = await this.entity.User.find().skip(skip).limit(take);
+    const users = await this.entity.User.find({
+      skip,
+      take,
+    });
     return users;
   }
 }

@@ -7,6 +7,6 @@ export class FieldResolvers {
 
   @ResolveField()
   async user(@Parent() recipe: Recipe): Promise<User> {
-    return await this.entity.User.findById(recipe.userId);
+    return await this.entity.User.findOne({ where: { id: recipe.userId } });
   }
 }

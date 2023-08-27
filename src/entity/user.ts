@@ -1,38 +1,35 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsOptional, Length, MaxLength } from 'class-validator';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
-
-export type UserDocument = HydratedDocument<User>;
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Recipe } from './recipe';
 
 @InputType({ isAbstract: true })
 @ObjectType({ isAbstract: true })
-export class UserBase {
-  @Field(() => ID)
-  id: string;
+@Entity()
+export class User {
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Field()
   @MaxLength(30)
-  @Prop({ required: true })
-  @Prop()
+  @Column({ unique: true })
   email: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @Length(30, 255)
-  @Prop()
+  @Column({ nullable: true })
   name?: string;
 
   @Field()
-  @Prop()
+  @Column({ default: '2023-01-01' })
   createdAt: Date;
 
   @Field()
-  @Prop()
+  @Column({ default: '2023-01-01' })
   updatedAt: Date;
+
+  @OneToMany(() => Recipe, (recipe) => recipe.user)
+  recipes: Recipe[];
 }
-
-@Schema({ timestamps: true })
-export class User extends UserBase {}
-
-export const UserSchema = SchemaFactory.createForClass(User);

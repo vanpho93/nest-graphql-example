@@ -20,7 +20,10 @@ export class ListRecipeResolver {
 
   @Query(() => [RecipeObjectType])
   async recipes(@Args() { skip, take }: RecipesArgs): Promise<Recipe[]> {
-    const recipes = await this.entity.Recipe.find().skip(skip).limit(take);
+    const recipes = await this.entity.Recipe.find({
+      skip,
+      take,
+    });
     return recipes;
   }
 }

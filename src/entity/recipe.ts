@@ -1,46 +1,43 @@
-import { Field, ID, InputType, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { IsOptional, Length, MaxLength } from 'class-validator';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, Types } from 'mongoose';
-
-export type RecipeDocument = HydratedDocument<RecipeBase>;
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from './user';
 
 @InputType({ isAbstract: true })
 @ObjectType({ isAbstract: true })
-export class RecipeBase {
-  @Field(() => ID)
-  id: string;
+@Entity()
+export class Recipe {
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Field()
+  @Column()
+  userId: number;
+
+  @ManyToOne(() => User, (user) => user.recipes)
+  user: User;
 
   @Field()
   @MaxLength(30)
-  @Prop({ required: true })
-  @Prop()
+  @Column()
   title: string;
 
   @Field({ nullable: true })
   @IsOptional()
   @Length(30, 255)
-  @Prop()
+  @Column()
   description?: string;
 
-  @Field()
-  @Prop()
-  createdAt: Date;
-
   @Field(() => [String])
-  @Prop()
+  @Column({ type: 'json' })
   ingredients: string[];
 
-  @Prop()
-  @Field(() => String)
-  userId: Types.ObjectId;
+  @Field()
+  @Column({ default: '2023-01-01' })
+  createdAt: Date;
 
   @Field()
-  @Prop()
+  @Column({ default: '2023-01-01' })
   updatedAt: Date;
 }
-
-@Schema({ timestamps: true })
-export class Recipe extends RecipeBase {}
-
-export const RecipeSchema = SchemaFactory.createForClass(Recipe);

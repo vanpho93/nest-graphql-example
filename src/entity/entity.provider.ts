@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Recipe } from './recipe';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user';
+import { Recipe } from './recipe';
 
 @Injectable()
 export class EntityProvider {
   public constructor(
-    @InjectModel(Recipe.name) public Recipe: Model<Recipe>,
-    @InjectModel(User.name) public User: Model<User>,
+    @InjectRepository(User) public User: Repository<User>,
+    @InjectRepository(Recipe) public Recipe: Repository<Recipe>,
   ) {}
 }
