@@ -1,9 +1,26 @@
 import * as graphql from 'graphql';
 import { Model } from 'mongoose';
-import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { InjectModel } from '@nestjs/mongoose';
+import {
+  Args,
+  Mutation,
+  Resolver,
+  Query,
+  InputType,
+  Field,
+} from '@nestjs/graphql';
 import { Typer } from '../dryerjs';
 import { User } from '../models';
-import { InjectModel } from '@nestjs/mongoose';
+
+@InputType()
+class UserEmail {
+  @Field(() => graphql.GraphQLString)
+  @IsEmail()
+  @Transform(({ value }) => value.toLowerCase())
+  email: string;
+}
 
 @Resolver()
 export class AuthResolver {
@@ -14,14 +31,20 @@ export class AuthResolver {
     @Args('input', { type: () => Typer.getInputType(User) })
     input: Omit<User, 'id'>,
   ) {
-    const result = await this.User.create(input);
-    return result;
+    return await this.User.create(input);
   }
 
   @Query(() => Typer.getObjectType(User))
-  whoAmI(
+  async whoAmI(
     @Args('userId', { type: () => graphql.GraphQLString }) userId: string,
   ) {
-    return this.User.findById(userId);
+    return await this.User.findById(userId);
+  }
+
+  @Query(() => Typer.getObjectType(User))
+  async getUserByEmail(
+    @Args('input', { type: () => UserEmail }) input: UserEmail,
+  ) {
+    return await this.User.findOne(input);
   }
 }
