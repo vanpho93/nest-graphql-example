@@ -1,25 +1,27 @@
 import { ObjectType, Field, InputType } from '@nestjs/graphql';
 
 import { Definition } from './shared';
-import { cached } from './property';
+import { defaultCached, objectCached } from './property';
 
 function getInputType(definition: Definition) {
   @InputType({ isAbstract: true })
   class AbstractInput {}
-  for (const property of Object.keys(cached[definition.name])) {
+  for (const property of Object.keys(defaultCached[definition.name])) {
     if (property === 'id') continue;
     const designType = Reflect.getMetadata(
       'design:type',
       definition.prototype,
       property,
     );
+
     Reflect.defineMetadata(
       'design:type',
       designType,
       AbstractInput.prototype,
       property,
     );
-    const { returnTypeFunction, options } = cached[definition.name][property];
+    const { returnTypeFunction, options } =
+      defaultCached[definition.name][property];
     Field(returnTypeFunction, options)(
       AbstractInput.prototype,
       property as string,
@@ -31,7 +33,7 @@ function getInputType(definition: Definition) {
 function getObjectType(definition: Definition) {
   @ObjectType({ isAbstract: true })
   class AbstractOutput {}
-  for (const property of Object.keys(cached[definition.name])) {
+  for (const property of Object.keys(defaultCached[definition.name])) {
     const designType = Reflect.getMetadata(
       'design:type',
       definition.prototype,
@@ -43,7 +45,10 @@ function getObjectType(definition: Definition) {
       AbstractOutput.prototype,
       property,
     );
-    const { returnTypeFunction, options } = cached[definition.name][property];
+    const { returnTypeFunction, options } =
+      objectCached?.[definition.name]?.[property] ||
+      defaultCached[definition.name][property];
+
     Field(returnTypeFunction, options)(
       AbstractOutput.prototype,
       property as string,
@@ -52,12 +57,20 @@ function getObjectType(definition: Definition) {
   return AbstractOutput;
 }
 
+const builtInput = Symbol('builtInput');
+const builtOutput = Symbol('builtOutput');
 export class Typer {
   public static getInputType(definition: Definition) {
-    return getInputType(definition);
+    if (definition[builtInput]) return definition[builtInput];
+    const result = getInputType(definition);
+    definition[builtInput] = result;
+    return definition[builtInput];
   }
 
   public static getObjectType(definition: Definition) {
-    return getObjectType(definition);
+    if (definition[builtOutput]) return definition[builtOutput];
+    const result = getObjectType(definition);
+    definition[builtOutput] = result;
+    return definition[builtOutput];
   }
 }

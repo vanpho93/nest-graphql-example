@@ -5,8 +5,7 @@ import {
   GqlTypeReference,
 } from '@nestjs/graphql';
 
-export const cached = {};
-
+export const defaultCached = {};
 type FieldOptionsExtractor<T> = T extends [GqlTypeReference<infer P>]
   ? FieldOptions<P[]>
   : T extends GqlTypeReference<infer P>
@@ -18,8 +17,24 @@ export function Property<T extends ReturnTypeFuncValue>(
   options?: FieldOptionsExtractor<T>,
 ): PropertyDecorator & MethodDecorator {
   return (target: object, propertyKey: string) => {
-    cached[target.constructor.name] = {
-      ...(cached[target.constructor.name] || {}),
+    defaultCached[target.constructor.name] = {
+      ...(defaultCached[target.constructor.name] || {}),
+      [propertyKey]: {
+        returnTypeFunction,
+        options,
+      },
+    };
+  };
+}
+
+export const objectCached = {};
+export function OutputProperty<T extends ReturnTypeFuncValue>(
+  returnTypeFunction?: ReturnTypeFunc<T>,
+  options?: FieldOptionsExtractor<T>,
+): PropertyDecorator & MethodDecorator {
+  return (target: object, propertyKey: string) => {
+    objectCached[target.constructor.name] = {
+      ...(objectCached[target.constructor.name] || {}),
       [propertyKey]: {
         returnTypeFunction,
         options,
