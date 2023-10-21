@@ -3,9 +3,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RecipeModule } from '@/apis/recipe/module';
-import { UserModule } from '@/apis/user/module';
-import { HealthCheckResolver } from './healthcheck.resolver';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
+import { DryerModule } from './dryerjs';
+import { Author } from './models/author';
 
 @Module({
   imports: [
@@ -13,13 +13,13 @@ import { HealthCheckResolver } from './healthcheck.resolver';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    RecipeModule,
-    UserModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
       sortSchema: true,
       installSubscriptionHandlers: true,
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -28,7 +28,9 @@ import { HealthCheckResolver } from './healthcheck.resolver';
         uri: configService.get('MONGO_URL') ?? '',
       }),
     }),
+    DryerModule.register({
+      definitions: [Author],
+    }),
   ],
-  providers: [HealthCheckResolver],
 })
 export class AppModule {}
