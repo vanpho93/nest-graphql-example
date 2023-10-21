@@ -7,6 +7,7 @@ function getInputType(definition: Definition) {
   @InputType({ isAbstract: true })
   class AbstractInput {}
   for (const property of Object.keys(cached[definition.name])) {
+    if (property === 'id') continue;
     const designType = Reflect.getMetadata(
       'design:type',
       definition.prototype,

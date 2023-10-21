@@ -9,6 +9,8 @@ import {
 } from '@nestjs/graphql';
 import { Definition } from './shared';
 import { Typer } from './typer';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 
 export function createResolver(definition: Definition) {
   @InputType(`Create${definition.name}Input`)
@@ -19,19 +21,22 @@ export function createResolver(definition: Definition) {
 
   @Resolver()
   class GeneratedResolver<T> {
+    constructor(@InjectModel(definition.name) public model: Model<any>) {}
+
     @Mutation(() => GeneratedObjectType)
-    [`create${definition.name}`](
+    async [`create${definition.name}`](
       @Args('input', { type: () => GeneratedInputType })
       input: any,
     ) {
-      return { ...input, id: 'test' };
+      return await this.model.create(input);
     }
 
     @Query(() => GeneratedObjectType)
     async [definition.name.toLowerCase()](
       @Args('id', { type: () => graphql.GraphQLID }) id: string,
     ): Promise<T> {
-      return { id, name: 'Brian' } as T;
+      const result = await this.model.findById(id);
+      return result;
     }
   }
 
