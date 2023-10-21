@@ -13,6 +13,7 @@ export class Book {
   name: string;
 }
 
+@Entity()
 @Schema()
 export class Author {
   @Property(() => graphql.GraphQLID)

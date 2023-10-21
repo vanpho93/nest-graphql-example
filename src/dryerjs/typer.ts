@@ -4,7 +4,7 @@ import { Definition } from './shared';
 import { defaultCached, objectCached } from './property';
 
 function getInputType(definition: Definition) {
-  @InputType({ isAbstract: true })
+  @InputType(`${definition.name}Input`, { isAbstract: true })
   class AbstractInput {}
   for (const property of Object.keys(defaultCached[definition.name])) {
     if (property === 'id') continue;
@@ -31,7 +31,7 @@ function getInputType(definition: Definition) {
 }
 
 function getObjectType(definition: Definition) {
-  @ObjectType({ isAbstract: true })
+  @ObjectType(definition.name, { isAbstract: true })
   class AbstractOutput {}
   for (const property of Object.keys(defaultCached[definition.name])) {
     const designType = Reflect.getMetadata(
