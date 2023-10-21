@@ -5,15 +5,19 @@ import { MongooseModule, SchemaFactory } from '@nestjs/mongoose';
 
 @Module({})
 export class DryerModule {
-  public static register(input: { definitions: Definition[] }): DynamicModule {
-    const mongooseSchemas = input.definitions.map((definition) => ({
-      name: definition.name,
-      schema: SchemaFactory.createForClass(definition),
-    }));
+  public static MongooseModuleForFeatureModule: DynamicModule;
 
+  public static register(input: { definitions: Definition[] }): DynamicModule {
     return {
       module: DryerModule,
-      imports: [MongooseModule.forFeature(mongooseSchemas)],
+      imports: [
+        MongooseModule.forFeature(
+          input.definitions.map((definition) => ({
+            name: definition.name,
+            schema: SchemaFactory.createForClass(definition),
+          })),
+        ),
+      ],
       providers: [...this.getProviders(input.definitions)],
     };
   }

@@ -1,9 +1,8 @@
 import * as graphql from 'graphql';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import { OutputProperty, Property, Typer, Entity } from '../dryerjs';
 
 @Entity()
-@Schema()
 export class Book {
   @Property(() => graphql.GraphQLID)
   id: string;
@@ -14,7 +13,6 @@ export class Book {
 }
 
 @Entity()
-@Schema()
 export class Author {
   @Property(() => graphql.GraphQLID)
   id: string;
