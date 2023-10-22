@@ -1,10 +1,11 @@
 import * as graphql from 'graphql';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { plainToInstance } from 'class-transformer';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { ValidationPipe } from '@nestjs/common';
 import { Typer } from '../dryerjs';
 import { User } from '../models';
-import { ValidationPipe } from '@nestjs/common';
 
 @Resolver()
 export class AuthResolver {
@@ -22,13 +23,15 @@ export class AuthResolver {
     )
     input: Omit<User, 'id'>,
   ) {
-    return await this.User.create(input);
+    const user = await this.User.create(input);
+    return plainToInstance(Typer.getObjectType(User), user.toObject());
   }
 
   @Query(() => Typer.getObjectType(User))
   async whoAmI(
     @Args('userId', { type: () => graphql.GraphQLString }) userId: string,
   ) {
-    return await this.User.findById(userId);
+    const user = await this.User.findById(userId);
+    return plainToInstance(Typer.getObjectType(User), user.toObject());
   }
 }
