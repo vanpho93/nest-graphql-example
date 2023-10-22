@@ -24,7 +24,7 @@ const definitions: Definition[] = [Author, User];
     MongooseModule.forRoot('mongodb://127.0.0.1:27017/test'),
     DryerModule.register({ definitions }),
     MongooseModule.forFeature(
-      definitions.map((definition) => ({
+      definitions.map(definition => ({
         name: definition.name,
         schema: SchemaFactory.createForClass(definition),
       })),

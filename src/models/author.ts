@@ -1,6 +1,6 @@
 import * as graphql from 'graphql';
 import { Prop, SchemaFactory } from '@nestjs/mongoose';
-import { OutputProperty, Property, Typer, Entity } from '../dryerjs';
+import { OutputProperty, Property, Typer, Entity, Embedded } from '../dryerjs';
 
 @Entity()
 export class Book {
@@ -21,6 +21,7 @@ export class Author {
   @Prop()
   name: string;
 
+  @Embedded(() => Book)
   @Property(() => [Typer.getInputType(Book)])
   @OutputProperty(() => [Typer.getObjectType(Book)])
   @Prop({ type: [SchemaFactory.createForClass(Book)] })

@@ -1,9 +1,4 @@
-import {
-  ReturnTypeFunc,
-  ReturnTypeFuncValue,
-  FieldOptions,
-  GqlTypeReference,
-} from '@nestjs/graphql';
+import { ReturnTypeFunc, ReturnTypeFuncValue, FieldOptions, GqlTypeReference } from '@nestjs/graphql';
 
 export const defaultCached = {};
 type FieldOptionsExtractor<T> = T extends [GqlTypeReference<infer P>]
@@ -48,10 +43,17 @@ export function Thunk(value: any): PropertyDecorator & MethodDecorator {
   return (target: object, propertyKey: string) => {
     thunkCached[target.constructor.name] = {
       ...(thunkCached[target.constructor.name] || {}),
-      [propertyKey]: [
-        ...(thunkCached[target.constructor.name]?.[propertyKey] || []),
-        value,
-      ],
+      [propertyKey]: [...(thunkCached[target.constructor.name]?.[propertyKey] || []), value],
+    };
+  };
+}
+
+export const embeddedCached = {};
+export function Embedded(fn: any) {
+  return (target: object, propertyKey: string) => {
+    embeddedCached[target.constructor.name] = {
+      ...(embeddedCached[target.constructor.name] || {}),
+      [propertyKey]: fn,
     };
   };
 }
