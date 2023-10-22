@@ -1,6 +1,7 @@
 import * as graphql from 'graphql';
 import { Prop } from '@nestjs/mongoose';
-import { Property, Entity } from '../dryerjs';
+import { IsEmail } from 'class-validator';
+import { Property, Entity, Thunk } from '../dryerjs';
 
 @Entity()
 export class User {
@@ -13,6 +14,7 @@ export class User {
 
   @Property()
   @Prop({ unique: true })
+  @Thunk(IsEmail())
   email: string;
 
   @Property()

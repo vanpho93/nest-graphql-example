@@ -42,3 +42,16 @@ export function OutputProperty<T extends ReturnTypeFuncValue>(
     };
   };
 }
+
+export const thunkCached = {};
+export function Thunk(value: any): PropertyDecorator & MethodDecorator {
+  return (target: object, propertyKey: string) => {
+    thunkCached[target.constructor.name] = {
+      ...(thunkCached[target.constructor.name] || {}),
+      [propertyKey]: [
+        ...(thunkCached[target.constructor.name]?.[propertyKey] || []),
+        value,
+      ],
+    };
+  };
+}

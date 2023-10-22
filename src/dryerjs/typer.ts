@@ -1,10 +1,10 @@
 import { ObjectType, Field, InputType } from '@nestjs/graphql';
 
 import { Definition } from './shared';
-import { defaultCached, objectCached } from './property';
+import { defaultCached, objectCached, thunkCached } from './property';
 
 function getInputType(definition: Definition) {
-  @InputType(`${definition.name}Input`, { isAbstract: true })
+  @InputType(`${definition.name}Input`)
   class AbstractInput {}
   for (const property of Object.keys(defaultCached[definition.name])) {
     if (property === 'id') continue;
@@ -20,12 +20,19 @@ function getInputType(definition: Definition) {
       AbstractInput.prototype,
       property,
     );
+
     const { returnTypeFunction, options } =
       defaultCached[definition.name][property];
+
     Field(returnTypeFunction, options)(
       AbstractInput.prototype,
       property as string,
     );
+
+    for (const thunkFunction of thunkCached[definition.name]?.[property] ||
+      []) {
+      thunkFunction(AbstractInput.prototype, property as string);
+    }
   }
   return AbstractInput;
 }
