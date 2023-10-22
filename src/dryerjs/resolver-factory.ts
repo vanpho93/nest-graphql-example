@@ -79,7 +79,6 @@ export function createResolverForEmbedded(definition: Definition, field: string)
     ): Promise<T> {
       const parent = await this.model.findById(parentId).select(field);
       const result = parent[field].find((item: any) => item._id.toString() === id);
-      const embeddedDefinition = Typer.getObjectType(embeddedCached[definition.name][field]());
       return plainToInstance(Typer.getObjectType(embeddedDefinition), result.toObject()) as any;
     }
   }
